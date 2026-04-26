@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}注册 - Secure Mail{% endblock %}
+{% block content %}
+<div class="card auth-card">
+  <h2>创建账户</h2>
+  <form method="post" action="{{ url_for('auth.register') }}">
+    <label>用户名</label>
+    <input type="text" name="username" required>
+    <label>邮箱</label>
+    <input type="email" name="email" required>
+    <label>密码</label>
+    <input type="password" name="password" required>
+    <label>确认密码</label>
+    <input type="password" name="confirm" required>
+    <button class="btn" type="submit">注册</button>
+  </form>
+  <p class="muted">已有账号？<a href="{{ url_for('auth.login') }}">去登录</a></p>
+  <p class="muted">注册后会发送确认邮件，请在邮箱中点击确认链接后再登录。</p>
+</div>
+{% endblock %}

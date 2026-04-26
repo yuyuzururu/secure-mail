@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}写信 - Secure Mail{% endblock %}
+{% block content %}
+<div class="card">
+  <h3>写信</h3>
+  <form id="compose-form" method="post" action="{{ url_for('main.send_mail') }}" autocomplete="off">
+    <label>收件人邮箱</label>
+    <div style="position:relative;">
+      <input type="email" id="recipient_email" name="recipient_email" placeholder="recipient@example.com" required>
+      <div id="recipient-suggestions" class="autocomplete-list" style="display:none;"></div>
+    </div>
+
+    <label>主题</label>
+    <input type="text" name="subject" required>
+
+    <label>正文</label>
+    <textarea name="body" rows="10" style="width:100%;padding:10px;border:1px solid #e6eefc;border-radius:6px;"></textarea>
+
+    <button class="btn" type="submit">发送</button>
+  </form>
+</div>
+{% endblock %}

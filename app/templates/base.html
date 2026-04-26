@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Secure Mail{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-$END$
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="brand">SecureMail</div>
+      <nav class="nav">
+        <a class="nav-item" href="{{ url_for('main.inbox') }}">收件箱</a>
+        <a class="nav-item" href="{{ url_for('main.compose') }}">写信</a>
+        <a class="nav-item" href="{{ url_for('main.sent') }}">已发送</a>
+        <a class="nav-item" href="{{ url_for('auth.logout') }}">登出</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="top-left">
+          <button class="hamburger" id="toggle-sidebar" aria-label="Toggle sidebar">☰</button>
+          <div class="app-title">Secure Mail</div>
+        </div>
+        <div class="user-info">
+          {% if current_user.is_authenticated %}
+            已登录：<strong>{{ current_user.username }}</strong>
+          {% else %}
+            未登录
+          {% endif %}
+        </div>
+      </header>
+
+      <section class="page">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-area">
+              {% for category, msg in messages %}
+                <div class="flash {{ category }}">{{ msg }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </section>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

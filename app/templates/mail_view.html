@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}查看邮件 - Secure Mail{% endblock %}
+{% block content %}
+<div class="card">
+  <h3>{{ mail.subject }}</h3>
+  <div class="meta">
+    来自: {{ mail.sender.username }} &nbsp; 收件于: {{ mail.created_at.strftime('%Y-%m-%d %H:%M') }}
+  </div>
+
+  {% if is_recipient %}
+    <div id="mail-content-area">
+      {% if plaintext %}
+        <div class="mail-box">{{ plaintext }}</div>
+        <div class="receipts">
+          <h4>签收证明</h4>
+          {% for r in receipts %}
+            <div>由用户 ID {{ r.receiver_id }} 于 {{ r.created_at.strftime('%Y-%m-%d %H:%M') }} 签收</div>
+          {% endfor %}
+        </div>
+      {% elif needs_password %}
+        <div class="muted">当前会话未缓存私钥。请输入密码以临时解密并查看这封邮件。</div>
+        <div style="margin-top:12px;">
+          <input type="password" id="decrypt-password" placeholder="请输入密码">
+          <button class="btn" id="decrypt-btn">解密查看</button>
+        </div>
+        <div id="decrypt-errors" style="margin-top:12px;color:#b00;"></div>
+      {% else %}
+        <div class="muted">无法解密邮件（权限或错误）。</div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="mail-box">（你不是收件人）</div>
+  {% endif %}
+
+  <!-- 签收表单：如果需要密码，JS 会拦截并处理 -->
+  {% if is_recipient %}
+    <form id="ack-form" method="post" action="{{ url_for('main.ack_mail', mail_id=mail.id) }}" style="margin-top:12px;">
+      <button class="btn" type="submit">签收并生成接收证明</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}
